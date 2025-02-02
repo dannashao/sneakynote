@@ -1,0 +1,16 @@
+#sticky-note {
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+#sticky-note-menu {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+}
+
+#sticky-note-menu select,
+#sticky-note-menu input {
+    border: 1px solid black;
+    padding: 3px;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Viewer</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        textarea, #rendered-content { width: 60%; height: 600px; 
+            resize: both; 
+            margin-top: 10px; 
+            display: none; 
+            border: 1px solid #ccc; 
+            padding: 10px; }
+        #rendered-content { background: #f9f9f9; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>View and Edit Note Content</h1>
+    <ul style="color:gray; font-size:16px">
+        <li>You can write or upload both plain text and HTML.</li>
+        <li>You can switch between plain text mode or render texts as HTML.</li>
+        <li>Save content changes and render mode here, refresh the note by toggle off/on to see the changes. </li>
+        <li>⚠️Note: Due to Chrome Extension security policies, scripts in HTML will NOT work in rendered mode.</li>
+      </ul>
+    <input type="file" id="file-input" accept=".txt,.html,.htm">
+    <button id="undo-content">Undo Changes</button>
+    <button id="save-content" style='margin-right:20px'>Save Changes</button>
+    <button id="toggle-view">Switch to Rendered Mode</button>
+
+    <textarea id="note-content"></textarea>
+    <div id="rendered-content-container">
+        <iframe id="rendered-content"></iframe>
+    </div>
+    <script src="viewer.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sticky Note Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 220px;
+            padding: 10px;
+        }
+        .setting {
+            margin-bottom: 10px;
+        }
+        .view-content {
+            margin: 0 auto;
+            display: block;
+            padding: 10px 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="note-status">Sticky note is off</h2>
+    <button id="toggle-note">Show/Hide Note</button>
+    
+    <h3>Position:</h3>
+    <div class="setting">
+        <label>Fix Position in Screen:</label>
+        <input type="checkbox" id="fix-position">
+    </div>
+    <div class="setting">
+        <button id="reset-position">Reset Position to upper left</button>
+    </div>
+
+    <h3>Customize:</h3>
+    <div class="setting">
+        <label>Background:</label>
+        <input type="color" id="bg-color">
+    </div>
+    <div class="setting">
+        <label>Text Color:</label>
+        <input type="color" id="text-color">
+    </div>
+    <div class="setting">
+        <label>Font Size:</label>
+        <input type="number" id="text-size" min="10" max="40" value="16">
+    </div>
+    <div class="setting">
+        <label>Font:</label>
+        <input type="text" id="font-input" list="font-list" placeholder="Select or enter a font">
+        <datalist id="font-list">
+            <option value="Arial"></option>
+            <option value="Courier New"></option>
+            <option value="Times New Roman"></option>
+            <option value="Verdana"></option>
+            <option value="Tahoma"></option>
+        </datalist>
+    </div>
+
+    <div class="setting">
+        <button id="view-content" class="view-content">Content Viewer</button>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
