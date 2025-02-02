@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateNoteStatus(isVisible) {
-        noteStatus.textContent = isVisible ? "Sticky note is shown" : "Sticky note is off";
+        noteStatus.textContent = isVisible ? "Sneaky note is shown" : "Sneaky note is off";
         // console.log("Updated note status:", noteStatus.textContent);
     }
 
