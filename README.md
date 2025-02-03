@@ -24,7 +24,7 @@ Multiple contents/Different contents on different pages: This extension is for s
 不会支持的内容：这是专门用来摸鱼的插件，不做真的笔记插件需要的功能
 
 ## Licence
-Context is open source software licensed as
+This content is open source software licensed as
 [MIT](https://github.com/betterRunner/context-note/blob/main/LICENSE.md).
 
 ## About
