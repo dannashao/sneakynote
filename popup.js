@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // console.log("Popup loaded!");
 
     const toggleBtn = document.getElementById("toggle-note");
     const noteStatus = document.getElementById("note-status");
@@ -7,19 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const textColorInput = document.getElementById("text-color");
     const textSizeInput = document.getElementById("text-size");
     const fontInput = document.getElementById("font-input");
+    const forceColorStyleCheckbox = document.getElementById("force-color-style");
+    const forceFontStyleCheckbox = document.getElementById("force-font-style");
     const fixPositionCheckbox = document.getElementById("fix-position");
     const resetPositionBtn = document.getElementById("reset-position");
     const viewContentBtn = document.getElementById("view-content");
+    const injectScrollbarCheckbox = document.getElementById("inject-scrollbar");
 
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (chrome.runtime.lastError) {
-            console.error("Error querying tabs:", chrome.runtime.lastError);
+            console.log("Error querying tabs:", chrome.runtime.lastError);
             return;
         }
 
         if (!tabs || tabs.length === 0) {
-            console.error("No active tab found.");
+            console.log("No active tab found.");
             return;
         }
 
@@ -28,39 +30,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Request current note state from content.js
         chrome.tabs.sendMessage(tabId, { action: "getNoteState" }, (response) => {
-            // console.log("Received response from content script:", response);
             if (response) {
                 let isVisible = response.isVisible;
                 updateNoteStatus(isVisible);
             } else {
-                console.error("No response received from content script.");
+                console.log("No response received from content script.");
             }
         });
     });
 
     toggleBtn.addEventListener("click", () => {
-       // console.log("Toggle button clicked");
 
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (!tabs || tabs.length === 0) {
-                console.error("No active tab found.");
+                console.log("No active tab found.");
                 return;
             }
 
             let tabId = tabs[0].id;
-            // console.log("Sending toggle request to content script for tab:", tabId);
 
             chrome.tabs.sendMessage(tabId, { action: "toggleNote" });
 
             // Request the updated state
             chrome.tabs.sendMessage(tabId, { action: "getNoteState" }, (response) => {
-                // console.log("Received updated response:", response);
                 if (response) {
                     let isVisible = response.isVisible;
                     chrome.runtime.sendMessage({ action: "updateIcon", isVisible, tabId });
                     updateNoteStatus(isVisible);
                 } else {
-                    console.error("No response after toggling note.");
+                    console.log("No response after toggling note.");
                 }
             });
         });
@@ -68,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateNoteStatus(isVisible) {
         noteStatus.textContent = isVisible ? "Sneaky note is shown" : "Sneaky note is off";
-        // console.log("Updated note status:", noteStatus.textContent);
     }
 
     function updateExtensionIcon(isVisible) {
@@ -83,7 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
             bgColor: bgColorInput.value,
             textColor: textColorInput.value,
             textSize: textSizeInput.value,
-            font: fontInput.value.trim() || "Arial"
+            font: fontInput.value.trim() || "Arial",
+            forceOverrideColor: forceColorStyleCheckbox.checked,
+            forceOverrideFont: forceFontStyleCheckbox.checked
         };
         chrome.storage.local.set({ noteStyle: style });
 
@@ -96,6 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
     textColorInput.addEventListener("input", updateNoteStyle);
     textSizeInput.addEventListener("input", updateNoteStyle);
     fontInput.addEventListener("input", updateNoteStyle);
+    forceColorStyleCheckbox.addEventListener("change", updateNoteStyle);
+    forceFontStyleCheckbox.addEventListener("change", updateNoteStyle);
 
     // Toggle fixed/absolute position
     fixPositionCheckbox.addEventListener("change", () => {
@@ -122,4 +123,17 @@ document.addEventListener("DOMContentLoaded", () => {
     viewContentBtn.addEventListener("click", () => {
         chrome.tabs.create({ url: chrome.runtime.getURL("viewer.html") });
     });
+
+    function updateInjectScrollbarSetting() {
+        chrome.storage.local.set({ injectScrollbar: injectScrollbarCheckbox.checked });
+
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                action: "toggleScrollbarInjection",
+                inject: injectScrollbarCheckbox.checked
+            });
+        });
+    }
+
+    injectScrollbarCheckbox.addEventListener("change", updateInjectScrollbarSetting);
 });

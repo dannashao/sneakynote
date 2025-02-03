@@ -14,18 +14,24 @@
         .view-content {
             margin: 0 auto;
             display: block;
-            padding: 10px 16px;
+            padding: 10px 40px;
+            text-align: center;
+        }
+        .toggle-note {
+            margin: 10 auto;
+            display: block;
+            padding: 10px 40px;
             text-align: center;
         }
     </style>
 </head>
 <body>
     <h2 id="note-status">Sneaky note is off</h2>
-    <button id="toggle-note">Show/Hide Note</button>
+    <button id="toggle-note" class="toggle-note">Show/Hide Note</button>
     
     <h3>Position:</h3>
     <div class="setting">
-        <label>Fix Position in Screen:</label>
+        <label>Fix Position on Screen:</label>
         <input type="checkbox" id="fix-position">
     </div>
     <div class="setting">
@@ -34,12 +40,18 @@
 
     <h3>Customize:</h3>
     <div class="setting">
+        <label><input type="checkbox" id="force-color-style">Force Override Inner HTML Styles</label>
+    </div>
+    <div class="setting">        
         <label>Background:</label>
         <input type="color" id="bg-color">
-    </div>
+    </div>  
     <div class="setting">
         <label>Text Color:</label>
         <input type="color" id="text-color">
+    </div>
+    <div class="setting">
+        <label><input type="checkbox" id="force-font-style">Force Override Inner HTML Fonts</label>
     </div>
     <div class="setting">
         <label>Font Size:</label>
@@ -56,7 +68,9 @@
             <option value="Tahoma"></option>
         </datalist>
     </div>
-
+    <div class="setting">
+        <label><input type="checkbox" id="inject-scrollbar">Sneaky Inner HTML Scrollbar</label>
+    </div>
     <div class="setting">
         <button id="view-content" class="view-content">Content Viewer</button>
     </div>

@@ -13,11 +13,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         loadStickyNoteContent();
     } else if (message.action === "getNoteState") {
         let isVisible = !!document.getElementById("sticky-note");
-        // console.log("Responding with note state:", isVisible);
+        console.log("Responding with note state:", isVisible);
         sendResponse({ isVisible });
     } else if (message.action === "testMessage") {
-        // console.log("Test message received.");
+        console.log("Test message received.");
         sendResponse({ success: true });
+    } else if (message.action === "toggleScrollbarInjection") {
+        let note = document.getElementById("sticky-note");
+        if (note) {
+            let iframe = note.querySelector("iframe");
+            if (iframe) {
+                let doc = iframe.contentDocument || iframe.contentWindow.document;
+                if (message.inject) {
+                    injectInnerScrollbarStyles(doc);
+                } else {
+                    let styleElement = doc.getElementById("custom-scrollbar-style");
+                    if (styleElement) styleElement.remove();
+                }
+            }
+        }
     }
 });
 
@@ -89,7 +103,7 @@ function applyNoteStyles(note, data) {
     `;
     injectScrollbarStyles();
 }
-// A sneaky scrollbar
+// Replace outer scrollbar into Sneaky scrollbar
 function injectScrollbarStyles() {
     let styleElement = document.getElementById("sticky-note-scrollbar-style");
 
@@ -131,10 +145,39 @@ function updateNoteContent(newContent, isHTML) {
             doc.open();
             doc.write(newContent);
             doc.close();
+
+            if (injectScrollbar) { // Inject Sneaky scrollbar to inner HTML
+                injectInnerScrollbarStyles(doc);
+            }
+
         } else {
             note.innerText = newContent;
         }
     }
+}
+function injectInnerScrollbarStyles(doc) {
+    if (!doc) return;
+
+    let styleElement = doc.getElementById("custom-scrollbar-style");
+
+    if (!styleElement) {
+        styleElement = doc.createElement("style");
+        styleElement.id = "custom-scrollbar-style";
+        doc.head.appendChild(styleElement);
+    }
+
+    styleElement.innerHTML = `
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+    `;
 }
 
 // Load Saved Content Based on Render Mode
@@ -203,18 +246,45 @@ function enableNoteDragAndResize(note) {
     });
 }
 
-// Apply Styles
+// Apply Styles with force override
 function applyStyle(style) {
     let note = document.getElementById("sticky-note");
+
     if (note) {
-        note.style.background = style.bgColor;
-        note.style.color = style.textColor;
-        note.style.fontSize = `${style.textSize}px`;
-        note.style.fontFamily = style.font;
+        if (style.forceOverrideColor) {
+            note.style.background = style.bgColor;
+            note.style.color = style.textColor;
+        }
+        if (style.forceOverrideFont) {
+            note.style.font = style.font;
+            note.style.textSize = style.textSize;
+        }
+
+        let iframe = note.querySelector("iframe");
+        if (iframe) {
+            let doc = iframe.contentDocument || iframe.contentWindow.document;
+            if (style.forceOverrideColor) {
+                let styleTag = doc.createElement("style");
+                styleTag.innerHTML = `
+                    body { background: ${style.bgColor} !important; 
+                    color: ${style.textColor} !important; }
+                `;
+                doc.head.appendChild(styleTag);
+            }
+            if (style.forceOverrideFont) {
+                let styleTag = doc.createElement("style");
+                styleTag.innerHTML = `
+                    body { font-family: ${style.font} !important; 
+                    font-size: ${style.textSize} !important; }
+                `;
+                doc.head.appendChild(styleTag);
+            }
+        }
 
         chrome.storage.local.set({ noteStyle: style });
     }
 }
+
 
 // Toggle Fixed Position
 function toggleFixedPosition(isFixed) {
