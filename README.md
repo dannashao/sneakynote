@@ -7,6 +7,8 @@ A sneaky sticky note chrome extension that blends seamlessly into webpages. Use 
 
 demo: [usage video 演示视频](https://youtu.be/LrMDMXUoyqQ)
 
+![output](https://github.com/user-attachments/assets/15068d3e-e115-448f-b791-7c6dad3d9266)
+
 ## Features
 - Note can scroll with the webpage 笔记可随页面滚动
 - Supports HTML rendering. 支持HTML渲染
