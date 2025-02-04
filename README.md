@@ -30,6 +30,10 @@ This content is open source software licensed as
 [MIT](https://github.com/betterRunner/context-note/blob/main/LICENSE.md).
 
 ## About
+The story behind this project is simply that: my friend was forced to study and read paper on holidays (they even have a real full-time job). Also some other friends are forced to do UNPAID overtime. The extension is created for them and many others just like them.
+
+感谢某个大过年的还被逼迫读论文的生化环材打工狗给我本项目灵感
+
 This is the very first js project I ever created and Idk how to improve it or anything I'm sorry.
 
 人生中第一次写js，写的烂请多包涵（
