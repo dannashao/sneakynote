@@ -3,7 +3,7 @@
   "name": "Sneaky Sticky Notes",
   "version": "1.1",
   "description": "A sneaky sticky note that blends seamlessly into webpages.",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab"],
   "background": {
     "service_worker": "background.js"
   },
